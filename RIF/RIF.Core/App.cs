@@ -1,17 +1,20 @@
-using MvvmCross.Platform.IoC;
+
+using RIF.Core.ViewModels;
+using MvvmCross.ViewModels;
 
 namespace RIF.Core
 {
-    public class App : MvvmCross.Core.ViewModels.MvxApplication
+    public class App : MvxApplication
     {
+        //public override void Initialize()
+        //{
+        //    RegisterNavigationServiceAppStart<MainViewModel>();
+        //}
+
         public override void Initialize()
         {
-            CreatableTypes()
-                .EndingWith("Service")
-                .AsInterfaces()
-                .RegisterAsLazySingleton();
-
-            RegisterNavigationServiceAppStart<ViewModels.FirstViewModel>();
+            base.Initialize();
+            RegisterAppStart<MainViewModel>();
         }
     }
 }

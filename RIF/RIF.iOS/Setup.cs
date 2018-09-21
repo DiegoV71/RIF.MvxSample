@@ -1,31 +1,27 @@
-using MvvmCross.Core.ViewModels;
-using MvvmCross.iOS.Platform;
-using MvvmCross.iOS.Views.Presenters;
-using MvvmCross.Platform.Platform;
-using UIKit;
+using MvvmCross.IoC;
+using MvvmCross.Platforms.Ios.Core;
+using RIF.Core;
+using MvvmCross;
+using RIF.Core.Interfaces;
+using RIF.iOS.Utilities;
 
 namespace RIF.iOS
 {
-    public class Setup : MvxIosSetup
+    public class Setup : MvxIosSetup<App>
     {
-        public Setup(MvxApplicationDelegate applicationDelegate, UIWindow window)
-            : base(applicationDelegate, window)
+        protected override void InitializeFirstChance()
         {
+            base.InitializeFirstChance();
+
+            Mvx.IoCProvider.RegisterSingleton<ILocalNotificationsManager>(() => new LocalNotificationsManager());
         }
 
-        public Setup(MvxApplicationDelegate applicationDelegate, IMvxIosViewPresenter presenter)
-            : base(applicationDelegate, presenter)
+        protected override IMvxIocOptions CreateIocOptions()
         {
-        }
-
-        protected override IMvxApplication CreateApp()
-        {
-            return new Core.App();
-        }
-
-        protected override IMvxTrace CreateDebugTrace()
-        {
-            return new DebugTrace();
+            return new MvxIocOptions
+            {
+                PropertyInjectorOptions = MvxPropertyInjectorOptions.MvxInject
+            };
         }
     }
 }

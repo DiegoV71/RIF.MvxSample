@@ -1,10 +1,22 @@
 ﻿using System;
+using MvvmCross.Plugin.Messenger;
+using System.Threading.Tasks;
 namespace RIF.Core.Messages
 {
-    public class DialogMessage
+    public class DialogMessage: MvxMessage
     {
-        public DialogMessage()
+        public string Text { get; }
+
+        public string[] Variants { get; }
+
+        public TaskCompletionSource<string> CompletionSource { get; }
+
+        public DialogMessage(object sender, string text, params string[] variants) : base(sender)
         {
+            Text = text;
+            Variants = variants;
+            CompletionSource = new TaskCompletionSource<string>();
         }
+
     }
 }

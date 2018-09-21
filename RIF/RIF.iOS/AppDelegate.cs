@@ -1,33 +1,24 @@
-﻿using MvvmCross.Core.ViewModels;
-using MvvmCross.iOS.Platform;
-using MvvmCross.Platform;
+﻿using System.Diagnostics;
 using Foundation;
+using MvvmCross.Platforms.Ios.Core;
 using UIKit;
+using UserNotifications;
+using RIF.Core;
 
 namespace RIF.iOS
 {
     [Register("AppDelegate")]
-    public partial class AppDelegate : MvxApplicationDelegate
+    public partial class AppDelegate : MvxApplicationDelegate<Setup, App>
     {
-        public override UIWindow Window
+
+        public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
-            get;
-            set;
-        }
+            var result = base.FinishedLaunching(application, launchOptions);
 
-        public override bool FinishedLaunching(UIApplication app, NSDictionary options)
-        {
-            Window = new UIWindow(UIScreen.MainScreen.Bounds);
+            UNUserNotificationCenter.Current.RequestAuthorization(UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound,
+                                                                  (a1, a2) => Debug.WriteLine($"Local Notifications Granted: {a1} {a2?.DebugDescription}"));
 
-            var setup = new Setup(this, Window);
-            setup.Initialize();
-
-            var startup = Mvx.Resolve<IMvxAppStart>();
-            startup.Start();
-
-            Window.MakeKeyAndVisible();
-
-            return true;
+            return result;
         }
     }
 }
